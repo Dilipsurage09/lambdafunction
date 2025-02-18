@@ -1,0 +1,18 @@
+version: 0.2
+phases:
+  install:
+    runtime-versions:
+      nodejs: 16
+  build:
+    commands:
+      - echo "Installing dependencies"
+      - npm install
+      - echo "Zipping files"
+      - zip -r deployment.zip index.js node_modules package.json
+  post_build:
+    commands:
+      - echo "Uploading to S3"
+      - aws s3 cp deployment.zip s3://my-lambda-artifacts/deployment.zip
+artifacts:
+  files:
+    - deployment.zip
